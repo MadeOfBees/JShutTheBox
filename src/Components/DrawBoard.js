@@ -11,12 +11,12 @@ const DisplayBoard = ({ playerTotal }) => {
   const [monoliths, setMonoliths] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
   const handleMonolithClick = (monolithNum) => {
-    const monolithIndex = monoliths.indexOf(monolithNum);
-    const newMonoliths = [...monoliths];
-    newMonoliths[monolithIndex] = 'X';
-    setMonoliths(newMonoliths);
-  }
-
+    if (monoliths[monolithNum - 1] !== 'X') {
+      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? 'X' : monolith));
+      setMonoliths(newMonoliths);
+    }
+  };
+  
   const setupPlayers = () => {
     const playerArray = [];
     for (let i = 0; i < playerTotal; i++) {
@@ -45,14 +45,12 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const rollDice = (playerIndex) => {
-    const newPlayers = [...players];
+
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const curtis = [dice1, dice2];
     setCurrentDice(curtis);
-    const dice = dice1 + dice2;
-    newPlayers[playerIndex].score += dice;
-    setPlayers(newPlayers);
+
     nextTurn(playerIndex);
     setKey(key + 1);
     const diceElements = document.querySelectorAll('.die');

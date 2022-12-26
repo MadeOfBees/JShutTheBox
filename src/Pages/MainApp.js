@@ -19,8 +19,8 @@ export default function MainApp() {
             drySecondModal("You need to enter a number!");
         } else if (userInput > 8) {
             drySecondModal("You can't have more than 8 players!");
-        } else if (userInput < 2) {
-            drySecondModal("You need at least 2 players to play this game!");
+        } else if (userInput < 1) {
+            drySecondModal("You need at least 1 player to play this game!");
         } else {
             setRefreshNum(refreshNum + 1);
             setTotalPlayers(userInput);
@@ -41,7 +41,7 @@ export default function MainApp() {
                 <Box sx={style}>
                     <Stack>
                         <h1>How many players?</h1>
-                        <Input placeholder="2 is the minimum" onChange={(e) => setUserInput(e.target.value)} />
+                        <Input placeholder="1 is the minimum" onChange={(e) => setUserInput(e.target.value)} />
                         <Button variant="contained" onClick={takeUserInput} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5%' }}>Submit</Button>
                     </Stack>
                 </Box>
