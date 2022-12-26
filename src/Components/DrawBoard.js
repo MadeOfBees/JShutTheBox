@@ -48,14 +48,19 @@ const DisplayBoard = ({ playerTotal }) => {
     const newPlayers = [...players];
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
-    const curtis = [dice1, dice2]
+    const curtis = [dice1, dice2];
     setCurrentDice(curtis);
     const dice = dice1 + dice2;
     newPlayers[playerIndex].score += dice;
     setPlayers(newPlayers);
     nextTurn(playerIndex);
     setKey(key + 1);
+    const diceElements = document.querySelectorAll('.die');
+    diceElements.forEach((die) => {
+      die.classList.add('spin');
+    });
   };
+  
 
   return (
     <div>
