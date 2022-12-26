@@ -14,7 +14,5 @@ const NineMonoliths = ({ monoliths, handleMonolithClick }) => (
       </Grid>
     </div>
   );
-  
-  
 
 export default NineMonoliths;

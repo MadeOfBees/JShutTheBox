@@ -11,13 +11,9 @@ const DisplayBoard = ({ playerTotal }) => {
   const [monoliths, setMonoliths] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
   const handleMonolithClick = (monolithNum) => {
-    // Find the index of the clicked monolith in the monoliths array
     const monolithIndex = monoliths.indexOf(monolithNum);
-    // Create a copy of the monoliths array
     const newMonoliths = [...monoliths];
-    // Update the monolith at the index with an 'X'
     newMonoliths[monolithIndex] = 'X';
-    // Set the new monoliths array as the state
     setMonoliths(newMonoliths);
   }
 

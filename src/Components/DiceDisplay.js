@@ -1,5 +1,3 @@
-// this component shows the 2 dice it's given as a prop individually as numbers
-
 import React from 'react';
 import {Grid} from '@mui/material';
 
@@ -14,4 +12,5 @@ const DiceDisplay = ({ currentDice }) => (
       </Grid>
     </div>
   );
+  
 export default DiceDisplay;  
