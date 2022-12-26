@@ -1,6 +1,6 @@
 import * as React from 'react';
 import DrawBoard from '../Components/DrawBoard';
-import { Box, Button, Grid, Modal, Stack } from '@mui/material';
+import { Box, Button, Grid, Modal, Stack, Input } from '@mui/material';
 
 export default function MainApp() {
     const [open, setOpen] = React.useState(false);
@@ -41,8 +41,8 @@ export default function MainApp() {
                 <Box sx={style}>
                     <Stack>
                         <h1>How many players?</h1>
-                        <input onChange={(e) => setUserInput(e.target.value)} />
-                        <Button variant="contained" onClick={takeUserInput} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20%' }}>Submit</Button>
+                        <Input placeholder="2 is the minimum" onChange={(e) => setUserInput(e.target.value)} />
+                        <Button variant="contained" onClick={takeUserInput} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5%' }}>Submit</Button>
                     </Stack>
                 </Box>
             </Modal>
