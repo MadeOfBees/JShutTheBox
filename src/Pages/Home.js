@@ -2,7 +2,7 @@ import MainApp from './MainApp';
 import toasty from 'toasty';
 import useKonami from 'use-konami';
 
-const MyComponent = () => {
+const Home = () => {
   useKonami({onUnlock: () => toasty().trigger()});
   return (
     <div>
@@ -11,4 +11,4 @@ const MyComponent = () => {
   );
 }
 
-export default MyComponent;
+export default Home;
