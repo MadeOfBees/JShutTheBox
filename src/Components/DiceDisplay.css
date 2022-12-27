@@ -5,6 +5,7 @@
 .die-4::before { content: '⚃'; }
 .die-5::before { content: '⚄'; }
 .die-6::before { content: '⚅'; }
+.die-0::before { content: '⠀'; }
 @keyframes roll {
   0% { transform: rotate(0); }
   10% { transform: rotate(-45deg); }

@@ -83,6 +83,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const rollDice = (playerIndex) => {
+    // TODO: make it so the player can't roll the dice twice in a row
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const curtis = [dice1, dice2];
@@ -126,9 +127,14 @@ const DisplayBoard = ({ playerTotal }) => {
     }
   };
 
-  const checkMonoliths = (dice) => {
-    // TODO: add logic to check if monoliths can be covered with dice
-    return true;
+  const checkMonoliths = (dice, monolith) => {
+    const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
+    if (diceSum >= monolith) {
+      const diceSumArray = [diceSum - monolith, 0];
+      setCurrentDice(diceSumArray);
+      return true;
+    }
+    return false;
   };
   
   const handleMonolithClick = (monolith) => {
@@ -140,7 +146,7 @@ const DisplayBoard = ({ playerTotal }) => {
         setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
         handleOpenErrorModal();
       } else {
-        const canCoverMonolith = checkMonoliths(currentDice);
+        const canCoverMonolith = checkMonoliths(currentDice, monolith);
         if (!canCoverMonolith) {
           setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
           handleOpenErrorModal();
