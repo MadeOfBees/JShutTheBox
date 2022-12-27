@@ -1,14 +1,29 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
+  const theme = useTheme();
   return (
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginTop: '5%' }}>
         {monoliths.map((monolithNum, index) => (
-          <Grid item xs={1} key={index}>
-            <button onClick={() => handleMonolithClick(monolithNum)} style={{ height: '5REM', width: '100%' }}>
-              {monolithNum}
+          <Grid item xs={1} key={index} style={{ maxWidth: '100%' }}>
+            <button
+              onClick={() => handleMonolithClick(monolithNum)}
+              style={{
+                height: '7REM',
+                width: "5REM",
+                border: `7px solid`,
+                background: 'inherit',
+                borderColor: theme.palette.mode === 'dark' ? "White" : "Black",
+                color: theme.palette.mode === 'dark' ? "White" : "Black",
+                '@media (minwidth: 600px)': {
+                  maxWidth: '50%',
+                },
+              }}
+            >
+              <Typography variant="h3">{monolithNum}</Typography>
             </button>
           </Grid>
         ))}

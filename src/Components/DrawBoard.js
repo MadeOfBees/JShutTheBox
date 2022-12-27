@@ -69,7 +69,7 @@ const DisplayBoard = ({ playerTotal }) => {
             <div key={player.playerNum}>
               <NineMonoliths monoliths={monoliths} handleMonolithClick={handleMonolithClick} />
               <DiceDisplay currentDice={currentDice} key={key} />
-              <Button variant="contained" onClick={() => rollDice(index)}>Roll Dice</Button>
+              <Button variant="contained" style={{ display: 'block', margin: '0 auto' }} onClick={() => rollDice(index)}>Roll Dice</Button>
             </div>
           );
         }

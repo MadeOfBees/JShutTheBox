@@ -13,10 +13,7 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 
-
-
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
-
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
