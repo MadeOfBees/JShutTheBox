@@ -112,7 +112,7 @@ const DisplayBoard = ({ playerTotal }) => {
   const endTurn = () => {
     const newPlayers = [...players];
     const monolithsLeft = monoliths.filter((monolith) => monolith !== '⠀');
-    const monolithsLeftSum = monolithsLeft.reduce((a, b) => a + b, 0);
+    const monolithsLeftSum = monolithsLeft.reduce((acc, cur) => acc + cur, 0);
     newPlayers.forEach((player) => {
       if (player.turn) {
         player.score += monolithsLeftSum;
@@ -126,17 +126,48 @@ const DisplayBoard = ({ playerTotal }) => {
     }
   };
 
-  const checkMonoliths = () => {
-    // TODO: check if the sum of the dice is equal to the total value of the monoliths removed
-
-  };
-
-  const handleMonolithClick = (monolithNum) => {
-    if (monoliths[monolithNum - 1] !== 'X') {
-      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? '⠀' : monolith));
-      setMonoliths(newMonoliths);
+  const checkMonoliths = (dice) => {
+    const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
+    const matchingMonolith = monoliths.find((monolith) => monolith === diceSum);
+    if (matchingMonolith) {
+      return true;
     }
+    const canCoverMonoliths = dice.every((die) => monoliths.includes(die));
+    if (canCoverMonoliths) {
+      return true;
+    }
+    return false;
   };
+  
+  const handleMonolithClick = (monolith) => {
+    if (currentDice.length === 0) {
+      setErrorModalContent("You must roll the dice before flipping a monolith!");
+      handleOpenErrorModal();
+    } else {
+      if (!monoliths.includes(monolith)) {
+        setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
+        handleOpenErrorModal();
+      } else {
+        const canCoverMonolith = checkMonoliths(currentDice);
+        if (!canCoverMonolith) {
+          setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+          handleOpenErrorModal();
+        } else {
+          const updatedMonoliths = monoliths.map((m) => {
+            if (m === monolith) {
+              return '⠀';
+            }
+            return m;
+          });
+          setMonoliths(updatedMonoliths);
+          if (monoliths.length === 0) {
+            setWinnerModalContent(`Player ${players[0].playerNum} wins!`);
+            handleOpenWinnerModal();
+          }
+        }
+      }
+    }
+  }; 
 
   const checkScore = () => {
     const newPlayers = [...players];
@@ -148,7 +179,7 @@ const DisplayBoard = ({ playerTotal }) => {
     if (lowestScorers.length > 1) {
       setWinnerModalContent("It's a tie!");
     }
-  };
+  }
 
   const endGame = () => {
     checkScore();
