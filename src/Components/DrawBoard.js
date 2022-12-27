@@ -127,6 +127,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const checkMonoliths = (dice) => {
+    // TODO: fix this function, it's not working properly
     const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
     const matchingMonolith = monoliths.find((monolith) => monolith === diceSum);
     if (matchingMonolith) {
