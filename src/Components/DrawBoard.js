@@ -127,17 +127,8 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const checkMonoliths = (dice) => {
-    // TODO: fix this function, it's not working properly
-    const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
-    const matchingMonolith = monoliths.find((monolith) => monolith === diceSum);
-    if (matchingMonolith) {
-      return true;
-    }
-    const canCoverMonoliths = dice.every((die) => monoliths.includes(die));
-    if (canCoverMonoliths) {
-      return true;
-    }
-    return false;
+    // TODO: add logic to check if monoliths can be covered with dice
+    return true;
   };
   
   const handleMonolithClick = (monolith) => {
