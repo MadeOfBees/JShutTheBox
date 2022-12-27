@@ -1,6 +1,5 @@
 # JShutTheBox
 
-## Description:
 a simple javascript port of the game Shut The Box, made with materialUI and react.
 
 ## "Installation"/Instructions:
