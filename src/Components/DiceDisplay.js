@@ -1,24 +1,24 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import {Box} from '@mui/material';
 import './DiceDisplay.css';
 
 const DiceDisplay = ({ currentDice }) => {
   const total = currentDice.reduce((acc, die) => acc + die, 0);
 
   return (
-    <Grid container spacing={1} justifyContent="center" alignItems="center" style={{display: 'flex', flexDirection: 'row' }}>
-      <Grid item xs={2}>
+    <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" mx="auto">
+      <Box mx={1}>
         <div className={`die die-${currentDice[0]} spin`}></div>
-      </Grid>
+      </Box>
       {total > 0 && (
-        <Grid item xs={1} style={{ display: 'flex', alignSelf: 'center', justifyContent: 'center' }}>
-          <div className="total">Total: {total}</div>
-        </Grid>
+        <Box mx={1}>
+          <h3 className="total">Total: {total}</h3>
+        </Box>
       )}
-      <Grid item xs={2}>
+      <Box mx={1}>
         <div className={`die die-${currentDice[1]} spin`}></div>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
