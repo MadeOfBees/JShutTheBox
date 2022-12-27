@@ -100,18 +100,33 @@ const drySecondModal = (type) => {
     setRefreshNum(refreshNum + 1);
   };
 
-  const turnLoop = (playerIndex) => {
-    // TODO: durring the players turn they first play the dice they rolled or roll a set of dice, the player clicks moniliths to remove them, if the total number of monoliths removed is equal to the sum of the dice they rolled, they get to roll again otherwise return to the next players turn
-    // first wait for them to click a monolith, then check if the sum of the dice is equal to the total value of the monoliths removed with our checkMonoliths function, if it is, they get to roll again, if not, return to the next players turn
-  };
-
   const nextTurn = (playerIndex) => {
+    endTurn();
     const newPlayers = [...players];
     newPlayers[playerIndex].turn = false;
     newPlayers[(playerIndex + 1) % playerTotal].turn = true;
     setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9])
     setPlayers(newPlayers);
     rollDice((playerIndex + 1) % playerTotal);
+  };
+
+  const endTurn = () => {
+    const newPlayers = [...players];
+    const monolithsLeft = monoliths.filter((monolith) => monolith !== '⠀');
+    const monolithsLeftSum = monolithsLeft.reduce((a, b) => a + b, 0);
+    newPlayers.forEach((player) => {
+      if (player.turn) {
+        player.score += monolithsLeftSum;
+      }
+    }
+    );
+    setPlayers(newPlayers);
+    checkScore();
+  };
+  
+  const turnLoop = (playerIndex) => {
+    // TODO: durring the players turn they first play the dice they rolled or roll a set of dice, the player clicks moniliths to remove them, if the total number of monoliths removed is equal to the sum of the dice they rolled, they get to roll again otherwise return to the next players turn
+    // first wait for them to click a monolith, then check if the sum of the dice is equal to the total value of the monoliths removed with our checkMonoliths function, if it is, they get to roll again, if not, return to the next players turn
   };
 
   const endGame = () => {
@@ -150,7 +165,7 @@ const drySecondModal = (type) => {
               <NineMonoliths monoliths={monoliths} handleMonolithClick={handleMonolithClick} />
               <DiceDisplay currentDice={currentDice} key={key} />
               {currentDice.length === 0 ? (
-                <Button variant="contained" style={{ display: 'block', margin: '4% auto' }} onClick={() => rollDice(index)}>Roll Dice</Button>
+                <Button variant="contained" style={{ display: 'block', margin: '4% auto',  width: '150px', height:"75px", fontSize:"17px"}} onClick={() => rollDice(index)}>Roll Dice</Button>
               ) : (
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item>
