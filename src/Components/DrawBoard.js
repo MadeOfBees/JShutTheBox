@@ -45,18 +45,28 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const rollDice = (playerIndex) => {
-
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const curtis = [dice1, dice2];
     setCurrentDice(curtis);
-
-    nextTurn(playerIndex);
+    turnLoop(playerIndex);
     setKey(key + 1);
     const diceElements = document.querySelectorAll('.die');
     diceElements.forEach((die) => {
       die.classList.add('roll');
     });
+  };
+
+  const turnLoop = (playerIndex) => {
+    // durring the players turn they first play the dice they rolled or roll a set of dice, the player clicks moniliths to remove them, if the total number of monoliths removed is equal to the sum of the dice they rolled, they get to roll again otherwise return to the next players turn
+    const diceSum = currentDice.reduce((a, b) => a + b, 0);
+    const monolithsRemoved = 9 - monoliths.filter((monolith) => monolith !== 'X').length;
+    if (diceSum === monolithsRemoved) {
+      rollDice(playerIndex);
+    }
+    else {
+      nextTurn(playerIndex);
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+
 const PlayerLineup = ({ players }) => {
   const theme = useTheme();
 
@@ -10,8 +11,8 @@ const PlayerLineup = ({ players }) => {
         {players.map(player => (
           <Grid item xs={3} key={player.playerNum}>
             <Box style={{ textAlign: 'center', color: player.turn ? theme.palette.primary.main : 'inherit', border: `.5REM solid ${theme.palette.mode === 'dark' ? "White" : "Black"}` }}>
-              <h3 style={{ fontSize: '1.2rem' }}>Player {player.playerNum}</h3>
-              <h3 style={{ fontSize: '1.5rem' }}>Score: {player.score}</h3>
+              <h5>Player {player.playerNum}</h5>
+              <h5>Score: {player.score}</h5>
             </Box>
           </Grid>
         ))}
