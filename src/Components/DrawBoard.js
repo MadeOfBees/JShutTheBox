@@ -137,6 +137,7 @@ const drySecondModal = (type) => {
     setPlayers(newPlayers);
     setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     rollDice(0);
+    handleClose();
   };
 
   return (
@@ -153,27 +154,24 @@ const drySecondModal = (type) => {
               ) : (
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item>
-                    <Button style={{ display: 'block', width: '150px' }} variant="contained" onClick={() => rollDice(index)}>Roll Dice</Button>
+                    <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => rollDice(index)}>Roll Dice</Button>
                   </Grid>
                   <Grid item>
-                    <Button style={{ display: 'block', width: '150px' }} variant="contained" onClick={() => nextTurn(index)}>End Turn</Button>
+                    <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => nextTurn(index)}>End Turn</Button>
                   </Grid>
                   <Grid item>
-                  <Button style={{ display: 'block', width: '150px' }} variant="contained" onClick={() => handleOpen()}>menu</Button>
+                  <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => handleOpen()}>Restart</Button>
                   </Grid>
                 </Grid>
               )}
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
-                  <Grid container spacing={2} justifyContent="center">
+                  <Grid container spacing={4} justifyContent="center">
                     <Grid item>
-                      <Button style={{ display: 'block', width: '150px', height:"60px" }} variant="contained" onClick={() => restart()}>Restart</Button>
+                      <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => restart()}>Reset my Game</Button>
                     </Grid>
                     <Grid item>
-                      <Button style={{ display: 'block', width: '150px', height:"60px" }} variant="contained" onClick={() => handleOpenQueryPlayersModal()}>Restart From Scratch</Button>
-                    </Grid>
-                    <Grid item>
-                      <Button style={{ display: 'block', width: "150px"}} variant="contained" onClick={() => restart()}>Placeholder</Button>
+                      <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => handleOpenQueryPlayersModal()}>Restart Completely</Button>
                     </Grid>
                   </Grid>
                 </Box>

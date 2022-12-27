@@ -36,7 +36,7 @@ export default function MainApp() {
 
     return (
         <div >
-            {totalPlayers ? <DrawBoard playerTotal={totalPlayers} refreshNum={refreshNum} /> : <Box sx={{ flexGrow: 2 }} style={{ marginTop: '20%' }}><Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginTop: '5%' }}><Button variant="contained" onClick={handleOpen}>Open The Box</Button></Grid></Box>}
+            {totalPlayers ? <DrawBoard playerTotal={totalPlayers} refreshNum={refreshNum} /> : <Box sx={{ flexGrow: 2 }} style={{ marginTop: '20%' }}><Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginTop: '34%' }}><Button variant="contained" style={{ display: 'block', width: '60%', height:"50%", fontSize:"3REM"}}onClick={handleOpen}>Open The Box</Button></Grid></Box>}
             <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
                     <Stack>
