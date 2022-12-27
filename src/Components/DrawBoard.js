@@ -12,11 +12,11 @@ const DisplayBoard = ({ playerTotal }) => {
 
   const handleMonolithClick = (monolithNum) => {
     if (monoliths[monolithNum - 1] !== 'X') {
-      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? 'X' : monolith));
+      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? '⠀' : monolith));
       setMonoliths(newMonoliths);
     }
   };
-  
+
   const setupPlayers = () => {
     const playerArray = [];
     for (let i = 0; i < playerTotal; i++) {
@@ -58,7 +58,7 @@ const DisplayBoard = ({ playerTotal }) => {
       die.classList.add('roll');
     });
   };
-  
+
   return (
     <div>
       <PlayerLineup players={players} />

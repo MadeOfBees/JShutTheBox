@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography,Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
@@ -9,7 +9,7 @@ const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
       <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginTop: '5%' }}>
         {monoliths.map((monolithNum, index) => (
           <Grid item xs={1} key={index} style={{ maxWidth: '100%' }}>
-            <button
+            <Button
               onClick={() => handleMonolithClick(monolithNum)}
               style={{
                 height: '7REM',
@@ -18,10 +18,11 @@ const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
                 background: 'inherit',
                 borderColor: theme.palette.mode === 'dark' ? "White" : "Black",
                 color: theme.palette.mode === 'dark' ? "White" : "Black",
+                borderRadius: 0
               }}
             >
               <Typography variant="h3">{monolithNum}</Typography>
-            </button>
+            </Button>
           </Grid>
         ))}
       </Grid>
