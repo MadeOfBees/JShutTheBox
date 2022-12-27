@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: roll .4s ease-in-out;
+    animation: roll .5s ease-in-out;
     font-size: 8REM;
   }
   
@@ -15,7 +15,7 @@
   
   @keyframes roll {
     0% { transform: rotate(0deg); }
-    5% { transform: rotate(-25deg); }
-    100% { transform: rotate(720deg); }
+    10% { transform: rotate(-45deg); }
+    100% { transform: rotate(360deg); }
   }
   
