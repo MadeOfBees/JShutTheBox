@@ -15,6 +15,9 @@ const DisplayBoard = ({ playerTotal }) => {
   const [queryPlayersModal, setQueryPlayersModal] = React.useState(false);
   const handleOpenQueryPlayersModal = () => setQueryPlayersModal(true);
   const handleCloseQueryPlayersModal = () => setQueryPlayersModal(false);
+  const [winnerModal, setWinnerModal] = React.useState(false);
+  const handleOpenWinnerModal = () => setWinnerModal(true);
+  const [winnerModalContent, setWinnerModalContent] = React.useState("");
   const [currentDice, setCurrentDice] = React.useState([]);
   const [players, setPlayers] = React.useState([]);
   const [key, setKey] = React.useState(0);
@@ -22,56 +25,53 @@ const DisplayBoard = ({ playerTotal }) => {
   const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4, };
   const [userInput, setUserInput] = React.useState(0);
   const [refreshNum, setRefreshNum] = React.useState(0);
-  
+  const handleCloseWinnerModal = () => {
+    setWinnerModal(false)
+    restart()
+  }
+
   const takeUserInput = () => {
     if (isNaN(userInput)) {
-        drySecondModal("You need to enter a number!");
+      drySecondModal("You need to enter a number!");
     } else if (userInput > 12) {
-        drySecondModal("You can't have more than 12 players!");
+      drySecondModal("You can't have more than 12 players!");
     } else if (userInput < 1) {
-        drySecondModal("You need at least 1 player to play this game!");
+      drySecondModal("You need at least 1 player to play this game!");
     } else {
-        startNewGame(userInput);
-        handleCloseQueryPlayersModal();
+      startNewGame(userInput);
+      handleCloseQueryPlayersModal();
     }
-};
+  };
 
-const drySecondModal = (type) => {
+  const drySecondModal = (type) => {
     setErrorModalContent(type);
     handleCloseQueryPlayersModal();
     handleOpenErrorModal(true);
-};
-
-  const handleMonolithClick = (monolithNum) => {
-    if (monoliths[monolithNum - 1] !== 'X') {
-      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? '⠀' : monolith));
-      setMonoliths(newMonoliths);
-    }
   };
 
   const setupPlayers = (newPlayers) => {
     if (!newPlayers) {
-    const playerArray = [];
-    for (let i = 0; i < playerTotal; i++) {
-      playerArray.push({ playerNum: i + 1, score: 0, turn: false });
-    }
-    playerArray[0].turn = true;
-    setPlayers(playerArray);
-    startGame(playerArray);
+      const playerArray = [];
+      for (let i = 0; i < playerTotal; i++) {
+        playerArray.push({ playerNum: i + 1, score: 0, turn: false, played: false });
+      }
+      playerArray[0].turn = true;
+      setPlayers(playerArray);
+      startGame(playerArray);
     } else {
-        const playerArray = [];
-        for (let i = 0; i < newPlayers; i++) {
-            playerArray.push({ playerNum: i + 1, score: 0, turn: false });
-        }
-        playerArray[0].turn = true;
-        setPlayers(playerArray);
-        startGame(playerArray);
+      const playerArray = [];
+      for (let i = 0; i < newPlayers; i++) {
+        playerArray.push({ playerNum: i + 1, score: 0, turn: false, played: false });
+      }
+      playerArray[0].turn = true;
+      setPlayers(playerArray);
+      startGame(playerArray);
     }
   };
-  
+
   // eslint-disable-next-line
   React.useEffect(() => { setupPlayers(); }, []);
-  
+
   const startGame = (playerArray) => {
     if (playerArray.length > 0) {
       const newPlayers = [...playerArray];
@@ -92,7 +92,6 @@ const drySecondModal = (type) => {
     diceElements.forEach((die) => {
       die.classList.add('roll');
     });
-    turnLoop(playerIndex);
   };
 
   const startNewGame = (newPlayerTotal) => {
@@ -117,20 +116,14 @@ const drySecondModal = (type) => {
     newPlayers.forEach((player) => {
       if (player.turn) {
         player.score += monolithsLeftSum;
+        player.played = true;
       }
     }
     );
     setPlayers(newPlayers);
-    checkScore();
-  };
-  
-  const turnLoop = (playerIndex) => {
-    // TODO: durring the players turn they first play the dice they rolled or roll a set of dice, the player clicks moniliths to remove them, if the total number of monoliths removed is equal to the sum of the dice they rolled, they get to roll again otherwise return to the next players turn
-    // first wait for them to click a monolith, then check if the sum of the dice is equal to the total value of the monoliths removed with our checkMonoliths function, if it is, they get to roll again, if not, return to the next players turn
-  };
-
-  const endGame = () => {
-    // TODO: end game when all players have played once and the player with the highest score wins
+    if (newPlayers.every((player) => player.played)) {
+      endGame();
+    }
   };
 
   const checkMonoliths = () => {
@@ -138,8 +131,28 @@ const drySecondModal = (type) => {
 
   };
 
+  const handleMonolithClick = (monolithNum) => {
+    if (monoliths[monolithNum - 1] !== 'X') {
+      const newMonoliths = monoliths.map((monolith, index) => (index + 1 === monolithNum ? '⠀' : monolith));
+      setMonoliths(newMonoliths);
+    }
+  };
+
   const checkScore = () => {
-    // TODO: check the score of all the players and sees who has the highest score
+    const newPlayers = [...players];
+    const lowestScore = Math.min(...newPlayers.map((player) => player.score));
+    const lowestScorers = newPlayers.filter((player) => player.score === lowestScore);
+    if (lowestScorers.length === 1) {
+      setWinnerModalContent(`Player ${lowestScorers[0].playerNum} wins!`);
+    }
+    if (lowestScorers.length > 1) {
+      setWinnerModalContent("It's a tie!");
+    }
+  };
+
+  const endGame = () => {
+    checkScore();
+    handleOpenWinnerModal();
   };
 
   const restart = () => {
@@ -147,6 +160,7 @@ const drySecondModal = (type) => {
     newPlayers.forEach((player) => {
       player.score = 0;
       player.turn = false;
+      player.played = false;
     });
     newPlayers[0].turn = true;
     setPlayers(newPlayers);
@@ -165,17 +179,17 @@ const drySecondModal = (type) => {
               <NineMonoliths monoliths={monoliths} handleMonolithClick={handleMonolithClick} />
               <DiceDisplay currentDice={currentDice} key={key} />
               {currentDice.length === 0 ? (
-                <Button variant="contained" style={{ display: 'block', margin: '4% auto',  width: '150px', height:"75px", fontSize:"17px"}} onClick={() => rollDice(index)}>Roll Dice</Button>
+                <Button variant="contained" style={{ display: 'block', margin: '4% auto', width: '150px', height: "75px", fontSize: "17px" }} onClick={() => rollDice(index)}>Roll Dice</Button>
               ) : (
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item>
-                    <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => rollDice(index)}>Roll Dice</Button>
+                    <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => rollDice(index)}>Roll Dice</Button>
                   </Grid>
                   <Grid item>
-                    <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => nextTurn(index)}>End Turn</Button>
+                    <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => nextTurn(index)}>End Turn</Button>
                   </Grid>
                   <Grid item>
-                  <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => handleOpen()}>Restart</Button>
+                    <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => handleOpen()}>Restart</Button>
                   </Grid>
                 </Grid>
               )}
@@ -183,26 +197,31 @@ const drySecondModal = (type) => {
                 <Box sx={style}>
                   <Grid container spacing={4} justifyContent="center">
                     <Grid item>
-                      <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => restart()}>Reset my Game</Button>
+                      <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => restart()}>Reset my Game</Button>
                     </Grid>
                     <Grid item>
-                      <Button style={{ display: 'block', width: '150px', height:"75px", fontSize:"17px"}} variant="contained" onClick={() => handleOpenQueryPlayersModal()}>Restart Completely</Button>
+                      <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => handleOpenQueryPlayersModal()}>Restart Completely</Button>
                     </Grid>
                   </Grid>
                 </Box>
               </Modal>
               <Modal open={errorModal} onClose={handleCloseErrorModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>{errorModalContent}</Box>
-            </Modal>
+              </Modal>
               <Modal open={queryPlayersModal} onClose={handleCloseQueryPlayersModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-              <Box sx={style}>
-                    <Stack>
-                        <h1>How many players?</h1>
-                        <Input placeholder="1 is the minimum" onChange={(e) => setUserInput(e.target.value)} />
-                        <Button variant="contained" onClick={takeUserInput} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5%' }}>Submit</Button>
-                    </Stack>
+                <Box sx={style}>
+                  <Stack>
+                    <h1>How many players?</h1>
+                    <Input placeholder="1 is the minimum" onChange={(e) => setUserInput(e.target.value)} />
+                    <Button variant="contained" onClick={takeUserInput} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5%' }}>Submit</Button>
+                  </Stack>
                 </Box>
-            </Modal>
+              </Modal>
+              <Modal open={winnerModal} onClose={handleCloseWinnerModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                <Stack>
+                  <Box sx={style}>{winnerModalContent}</Box>
+                </Stack>
+              </Modal>
             </div>
           );
         }
