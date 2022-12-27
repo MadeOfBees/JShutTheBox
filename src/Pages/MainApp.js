@@ -17,8 +17,8 @@ export default function MainApp() {
     const takeUserInput = () => {
         if (isNaN(userInput)) {
             drySecondModal("You need to enter a number!");
-        } else if (userInput > 8) {
-            drySecondModal("You can't have more than 8 players!");
+        } else if (userInput > 12) {
+            drySecondModal("You can't have more than 12 players!");
         } else if (userInput < 1) {
             drySecondModal("You need at least 1 player to play this game!");
         } else {
