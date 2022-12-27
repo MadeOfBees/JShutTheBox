@@ -15,6 +15,7 @@
   
   @keyframes roll {
     0% { transform: rotate(0deg); }
+    5% { transform: rotate(-25deg); }
     100% { transform: rotate(720deg); }
   }
   

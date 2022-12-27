@@ -59,7 +59,6 @@ const DisplayBoard = ({ playerTotal }) => {
     });
   };
   
-
   return (
     <div>
       <PlayerLineup players={players} />
