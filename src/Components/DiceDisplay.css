@@ -1,21 +1,45 @@
 .die {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: roll .5s ease-in-out;
-    font-size: 8REM;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: roll .5s ease-in-out;
+  font-size: 8REM;
+}
+
+.die-1::before {
+  content: '⚀';
+}
+
+.die-2::before {
+  content: '⚁';
+}
+
+.die-3::before {
+  content: '⚂';
+}
+
+.die-4::before {
+  content: '⚃';
+}
+
+.die-5::before {
+  content: '⚄';
+}
+
+.die-6::before {
+  content: '⚅';
+}
+
+@keyframes roll {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .die-1::before {content: '⚀';}
-  .die-2::before {content: '⚁';}
-  .die-3::before {content: '⚂';}
-  .die-4::before {content: '⚃';}
-  .die-5::before {content: '⚄';}
-  .die-6::before {content: '⚅';}
-  
-  @keyframes roll {
-    0% { transform: rotate(0deg); }
-    10% { transform: rotate(-45deg); }
-    100% { transform: rotate(360deg); }
+
+  10% {
+    transform: rotate(-45deg);
   }
-  
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

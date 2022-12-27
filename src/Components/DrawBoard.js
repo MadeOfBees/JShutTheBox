@@ -55,7 +55,7 @@ const DisplayBoard = ({ playerTotal }) => {
     setKey(key + 1);
     const diceElements = document.querySelectorAll('.die');
     diceElements.forEach((die) => {
-      die.classList.add('spin');
+      die.classList.add('roll');
     });
   };
   

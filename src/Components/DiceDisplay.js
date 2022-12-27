@@ -11,7 +11,6 @@ const DiceDisplay = ({ currentDice }) => (
       </Grid>      
       ))}
     </Grid>
-
   </div>
 );
 
