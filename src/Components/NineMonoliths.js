@@ -18,9 +18,6 @@ const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
                 background: 'inherit',
                 borderColor: theme.palette.mode === 'dark' ? "White" : "Black",
                 color: theme.palette.mode === 'dark' ? "White" : "Black",
-                '@media (minwidth: 600px)': {
-                  maxWidth: '50%',
-                },
               }}
             >
               <Typography variant="h3">{monolithNum}</Typography>
