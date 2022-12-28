@@ -25,7 +25,8 @@ const DisplayBoard = ({ playerTotal }) => {
   const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4, };
   const [userInput, setUserInput] = React.useState(0);
   const [refreshNum, setRefreshNum] = React.useState(0);
-  const handleCloseWinnerModal = () => {setWinnerModal(false);restart();}
+  const handleCloseWinnerModal = () => { setWinnerModal(false); restart(); }
+  const [rolledThisTurn, setRolledThisTurn] = React.useState(false);
 
   const takeUserInput = () => {
     if (isNaN(userInput)) {
@@ -79,17 +80,22 @@ const DisplayBoard = ({ playerTotal }) => {
     }
   };
 
-  const rollDice = (playerIndex) => {
-    // TODO: make it so the player can't roll the dice twice in a row
-    const dice1 = Math.floor(Math.random() * 6) + 1;
-    const dice2 = Math.floor(Math.random() * 6) + 1;
-    const curtis = [dice1, dice2];
-    setCurrentDice(curtis);
-    setKey(key + 1);
-    const diceElements = document.querySelectorAll('.die');
-    diceElements.forEach((die) => {
-      die.classList.add('roll');
-    });
+  const rollDice = (playerIndex, canRoll) => {
+    if (!rolledThisTurn || canRoll) {
+      setRolledThisTurn(true)
+      const dice1 = Math.floor(Math.random() * 6) + 1;
+      const dice2 = Math.floor(Math.random() * 6) + 1;
+      const curtis = [dice1, dice2];
+      setCurrentDice(curtis);
+      setKey(key + 1);
+      const diceElements = document.querySelectorAll('.die');
+      diceElements.forEach((die) => {
+        die.classList.add('roll');
+      });
+    } else {
+      setErrorModalContent("You've already rolled this turn");
+      handleOpenErrorModal();
+    }
   };
 
   const startNewGame = (newPlayerTotal) => {
@@ -104,7 +110,8 @@ const DisplayBoard = ({ playerTotal }) => {
     newPlayers[(playerIndex + 1) % playerTotal].turn = true;
     setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9])
     setPlayers(newPlayers);
-    rollDice((playerIndex + 1) % playerTotal);
+    setRolledThisTurn(false)
+    rollDice(((playerIndex + 1) % playerTotal),true);
   };
 
   const endTurn = () => {
@@ -125,7 +132,6 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const checkMonoliths = (dice, monolith) => {
-    // TODO: make it so the player can't flip a monolith at all if there's no way to cover it with no remainder
     const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
     if (diceSum >= monolith) {
       const diceSumArray = [diceSum - monolith, 0];
@@ -134,36 +140,54 @@ const DisplayBoard = ({ playerTotal }) => {
     }
     return false;
   };
-  
+
+  const canCoverMonolithWithoutRemainder = (monolithValue, diceRolls) => {
+    const diceSum = diceRolls.reduce((acc, cur) => acc + cur, 0);
+    if (diceSum >= monolithValue) {
+      const remainder = diceSum - monolithValue;
+      const monolithsLeft = monoliths.filter((monolith) => monolith !== '⠀');
+      const monolithsLeftSum = monolithsLeft.reduce((acc, cur) => acc + cur, 0);
+      if (monolithsLeftSum >= remainder) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleMonolithClick = (monolith) => {
     if (currentDice.length === 0) {
       setErrorModalContent("You must roll the dice before flipping a monolith!");
       handleOpenErrorModal();
     } else {
-      if (!monoliths.includes(monolith)) {
-        setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
+      if (!canCoverMonolithWithoutRemainder(monolith, currentDice)) {
+        setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
         handleOpenErrorModal();
-      } else {
-        const canCoverMonolith = checkMonoliths(currentDice, monolith);
-        if (!canCoverMonolith) {
-          setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+      } else
+        if (!monoliths.includes(monolith)) {
+          setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
           handleOpenErrorModal();
         } else {
-          const updatedMonoliths = monoliths.map((m) => {
-            if (m === monolith) {
-              return '⠀';
+          const canCoverMonolith = checkMonoliths(currentDice, monolith);
+          if (!canCoverMonolith) {
+            setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+            handleOpenErrorModal();
+          } else {
+            const updatedMonoliths = monoliths.map((m) => {
+              setRolledThisTurn(false);
+              if (m === monolith) {
+                return '⠀';
+              }
+              return m;
+            });
+            setMonoliths(updatedMonoliths);
+            if (monoliths.length === 0) {
+              setWinnerModalContent(`Player ${players[0].playerNum} wins!`);
+              handleOpenWinnerModal();
             }
-            return m;
-          });
-          setMonoliths(updatedMonoliths);
-          if (monoliths.length === 0) {
-            setWinnerModalContent(`Player ${players[0].playerNum} wins!`);
-            handleOpenWinnerModal();
           }
         }
-      }
     }
-  }; 
+  };
 
   const checkScore = () => {
     const newPlayers = [...players];
@@ -173,7 +197,9 @@ const DisplayBoard = ({ playerTotal }) => {
       setWinnerModalContent(`Player ${lowestScorers[0].playerNum} wins!`);
     }
     if (lowestScorers.length > 1) {
-      setWinnerModalContent("It's a tie!");
+      const listPlayersWithoutAnd = lowestScorers.map((player) => player.playerNum).join(', ');
+      const listWinnerPlayers = listPlayersWithoutAnd.replace(/,(?!.*,)/gmi, ' and');
+      setWinnerModalContent(`It's a tie! Players ${listWinnerPlayers} win!`);
     }
   }
 
@@ -182,8 +208,8 @@ const DisplayBoard = ({ playerTotal }) => {
     handleOpenWinnerModal();
   };
 
-  const restart = () => {
-    // TODO: make it so the game actually restarts
+  const restart = (one) => {
+    // TODO: make it so the game actually restarts instead of just resetting the scores, the players are bugged where it shows the right number of players but only players that entered the first game get a turn.
     const newPlayers = [...players];
     newPlayers.forEach((player) => {
       player.score = 0;
@@ -193,7 +219,7 @@ const DisplayBoard = ({ playerTotal }) => {
     newPlayers[0].turn = true;
     setPlayers(newPlayers);
     setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    rollDice(0);
+    rollDice(0, true);
     handleClose();
   };
 
@@ -225,7 +251,7 @@ const DisplayBoard = ({ playerTotal }) => {
                 <Box sx={style}>
                   <Grid container spacing={4} justifyContent="center">
                     <Grid item>
-                      <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => restart()}>Reset my Game</Button>
+                      <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => restart(1)}>Reset my Game</Button>
                     </Grid>
                     <Grid item>
                       <Button style={{ display: 'block', width: '150px', height: "75px", fontSize: "17px" }} variant="contained" onClick={() => handleOpenQueryPlayersModal()}>Restart Completely</Button>
