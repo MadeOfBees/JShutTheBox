@@ -186,6 +186,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const restart = () => {
+    // TODO: make it so the game actually restarts
     const newPlayers = [...players];
     newPlayers.forEach((player) => {
       player.score = 0;
