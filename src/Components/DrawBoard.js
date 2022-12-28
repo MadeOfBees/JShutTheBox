@@ -25,10 +25,7 @@ const DisplayBoard = ({ playerTotal }) => {
   const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4, };
   const [userInput, setUserInput] = React.useState(0);
   const [refreshNum, setRefreshNum] = React.useState(0);
-  const handleCloseWinnerModal = () => {
-    setWinnerModal(false)
-    restart()
-  }
+  const handleCloseWinnerModal = () => {setWinnerModal(false);restart();}
 
   const takeUserInput = () => {
     if (isNaN(userInput)) {
