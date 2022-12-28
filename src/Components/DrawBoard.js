@@ -128,6 +128,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const checkMonoliths = (dice, monolith) => {
+    // TODO: make it so the player can't flip a monolith at all if there's no way to cover it with no remainder
     const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
     if (diceSum >= monolith) {
       const diceSumArray = [diceSum - monolith, 0];
