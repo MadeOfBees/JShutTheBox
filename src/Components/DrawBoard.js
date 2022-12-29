@@ -155,6 +155,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const handleMonolithClick = (monolith) => {
+    // TODO: make this actually check if the monolith can be flipped
     if (currentDice.length === 0) {
       setErrorModalContent("You must roll the dice before flipping a monolith!");
       handleOpenErrorModal();
