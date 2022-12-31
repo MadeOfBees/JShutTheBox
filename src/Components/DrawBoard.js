@@ -221,7 +221,7 @@ const DisplayBoard = ({ playerTotal }) => {
     const lowestScore = Math.min(...newPlayers.map((player) => player.score));
     const lowestScorers = newPlayers.filter((player) => player.score === lowestScore);
     if (lowestScorers.length === 1) {
-      setWinnerModalContent(`Player ${lowestScorers[0].playerNum} wins!`);
+      setWinnerModalContent(`Player ${lowestScorers[0].playerNum} wins with ${lowestScore} points!`);
     }
     if (lowestScorers.length > 1) {
       const listPlayersWithoutAnd = lowestScorers.map((player) => player.playerNum).join(', ');
