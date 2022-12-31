@@ -193,7 +193,7 @@ const DisplayBoard = ({ playerTotal, style }) => {
     }
     else {
       if (currentDice.length === 0) {
-        setErrorModalContent("You've already played the current dice, roll again!");
+        setErrorModalContent("Roll the dice!");
         handleOpenErrorModal();
       } else {
         const canCoverMonolith = checkMonoliths(currentDice, monolith);
