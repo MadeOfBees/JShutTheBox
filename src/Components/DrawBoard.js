@@ -6,7 +6,7 @@ import { Grid, Box, Modal, Button, Stack, Input } from '@mui/material';
 const toNineUp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
-const DisplayBoard = ({playerTotal,style}) => {
+const DisplayBoard = ({ playerTotal, style }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -193,33 +193,32 @@ const DisplayBoard = ({playerTotal,style}) => {
     }
     else {
       if (currentDice.length === 0) {
-        setErrorModalContent("You must roll the dice before flipping a tile!");
+        setErrorModalContent("You've already played the current dice, roll again!");
         handleOpenErrorModal();
       } else {
-        if (!monoliths.includes(monolith)) {
-          setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
+        const canCoverMonolith = checkMonoliths(currentDice, monolith);
+        if (!canCoverMonolith) {
+          setErrorModalContent(`Cannot flip tile ${monolith} with current dice!`);
           handleOpenErrorModal();
         } else {
-          const canCoverMonolith = checkMonoliths(currentDice, monolith);
-          if (!canCoverMonolith) {
-            setErrorModalContent(`Cannot flip tile ${monolith} with current dice!`);
-            handleOpenErrorModal();
-          } else {
-            const updatedMonoliths = monoliths.map((m) => {
-              setRolledThisTurn(false);
-              if (m === monolith) {
-                return '✓';
-              }
-              return m;
-            });
-            setMonoliths(updatedMonoliths);
-          }
+          const updatedMonoliths = monoliths.map((m) => {
+            setRolledThisTurn(false);
+            if (m === monolith) {
+              return '✓';
+            }
+            return m;
+          });
+          setMonoliths(updatedMonoliths);
         }
       }
     }
   };
 
   const checkScore = () => {
+    if (players.length === 1) {
+      setWinnerModalContent(`You had ${players[0].score} points!`);
+      return;
+    }
     const newPlayers = [...players];
     const lowestScore = Math.min(...newPlayers.map((player) => player.score));
     const lowestScorers = newPlayers.filter((player) => player.score === lowestScore);
