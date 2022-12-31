@@ -52,7 +52,6 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const setupPlayers = (newPlayers) => {
-    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     if (!newPlayers) {
       const playerArray = [];
       for (let i = 0; i < playerTotal; i++) {
@@ -115,9 +114,9 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const startNewGame = (newPlayerTotal) => {
-    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     setupPlayers(newPlayerTotal);
     setRefreshNum(refreshNum + 1);
+    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   };
 
   const nextStep = (playerIndex) => {
