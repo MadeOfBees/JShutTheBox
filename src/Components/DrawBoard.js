@@ -5,7 +5,6 @@ import NineMonoliths from './NineMonoliths';
 import { Grid, Box, Modal, Button, Stack, Input } from '@mui/material';
 const toNineUp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-
 const DisplayBoard = ({ playerTotal, style }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
