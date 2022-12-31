@@ -21,8 +21,8 @@ const DisplayBoard = ({ playerTotal }) => {
   const [currentDice, setCurrentDice] = React.useState([]);
   const [players, setPlayers] = React.useState([]);
   const [key, setKey] = React.useState(0);
-  const standardMonoliths = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [monoliths, setMonoliths] = React.useState(standardMonoliths);
+  const toNineUp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [monoliths, setMonoliths] = React.useState(toNineUp);
   const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4, };
   const [userInput, setUserInput] = React.useState(0);
   const [refreshNum, setRefreshNum] = React.useState(0);
@@ -117,7 +117,7 @@ const DisplayBoard = ({ playerTotal }) => {
   const startNewGame = (newPlayerTotal) => {
     setupPlayers(newPlayerTotal);
     setRefreshNum(refreshNum + 1);
-    setMonoliths(standardMonoliths);
+    setMonoliths(toNineUp);
   };
 
   const nextStep = (playerIndex) => {
@@ -153,14 +153,14 @@ const DisplayBoard = ({ playerTotal }) => {
       });
       newPlayers[playerIndex].turn = false;
       newPlayers[(playerIndex + 1) % totalPlayers].turn = true;
-      setMonoliths(standardMonoliths);
+      setMonoliths(toNineUp);
       setPlayers(newPlayers);
       setRolledThisTurn(false);
       if (newPlayers.every((player) => player.played)) {
         endGame();
       } else {
         rollDice(((playerIndex + 1) % totalPlayers), true);
-        setMonoliths(standardMonoliths);
+        setMonoliths(toNineUp);
       }
     }
   };
@@ -248,7 +248,7 @@ const DisplayBoard = ({ playerTotal }) => {
     newPlayers[0].turn = true;
     setPlayers(newPlayers);
     rollDice(0, true);
-    setMonoliths(standardMonoliths);
+    setMonoliths(toNineUp);
     handleClose();
   };
 
