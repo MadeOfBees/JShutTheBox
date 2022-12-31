@@ -8,7 +8,7 @@ const PlayerLineup = ({ players }) => {
     <div className="main-div">
       <Grid container spacing={1} style={{ display: 'flex', justifyContent: 'center', marginTop: '2%' }}>
         {players.map(player => (
-          <Grid item xs={6} md={2} key={player.playerNum}>
+          <Grid item xs={12} s={6} md={4} lg={2} key={player.playerNum}>
             <Box style={{textAlign: 'center', color: player.turn ? theme.palette.primary.main : 'inherit', border: `.5REM solid ${theme.palette.mode === 'dark' ? "White" : "Black"}` }}>
               <h1>P{player.playerNum}</h1>
               <h5>Score: {player.score}</h5>
