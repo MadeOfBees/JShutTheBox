@@ -52,6 +52,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const setupPlayers = (newPlayers) => {
+    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     if (!newPlayers) {
       const playerArray = [];
       for (let i = 0; i < playerTotal; i++) {
@@ -235,7 +236,7 @@ const DisplayBoard = ({ playerTotal }) => {
     handleOpenWinnerModal();
   };
 
-  const restart = (one) => {
+  const restart = () => {
     const newPlayers = [...players];
     newPlayers.forEach((player) => {
       player.score = 0;
@@ -244,8 +245,8 @@ const DisplayBoard = ({ playerTotal }) => {
     });
     newPlayers[0].turn = true;
     setPlayers(newPlayers);
-    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     rollDice(0, true);
+    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     handleClose();
   };
 
