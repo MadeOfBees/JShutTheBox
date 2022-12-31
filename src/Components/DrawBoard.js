@@ -115,6 +115,7 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const startNewGame = (newPlayerTotal) => {
+    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     setupPlayers(newPlayerTotal);
     setRefreshNum(refreshNum + 1);
   };
