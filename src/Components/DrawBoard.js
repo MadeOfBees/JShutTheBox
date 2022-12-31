@@ -108,7 +108,7 @@ const DisplayBoard = ({ playerTotal }) => {
         setMonoliths(newMonoliths);
       }
     } else {
-      setErrorModalContent("You've already rolled this turn");
+      setErrorModalContent("You've already rolled this turn, click some tiles to continue!");
       handleOpenErrorModal();
     }
   };
@@ -192,7 +192,7 @@ const DisplayBoard = ({ playerTotal }) => {
     }
     else {
       if (currentDice.length === 0) {
-        setErrorModalContent("You must roll the dice before flipping a monolith!");
+        setErrorModalContent("You must roll the dice before flipping a tile!");
         handleOpenErrorModal();
       } else {
         if (!monoliths.includes(monolith)) {
@@ -201,7 +201,7 @@ const DisplayBoard = ({ playerTotal }) => {
         } else {
           const canCoverMonolith = checkMonoliths(currentDice, monolith);
           if (!canCoverMonolith) {
-            setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+            setErrorModalContent(`Cannot flip tile ${monolith} with current dice!`);
             handleOpenErrorModal();
           } else {
             const updatedMonoliths = monoliths.map((m) => {
@@ -307,7 +307,7 @@ const DisplayBoard = ({ playerTotal }) => {
               <Modal open={askReset} onClose={handleCloseAskReset} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
                   <Stack>
-                    <h4 style={{ textAlign: 'center' }}>Are you sure you want to reset all checked monoliths?</h4>
+                    <h4 style={{ textAlign: 'center' }}>Are you sure you want to reset all checked tiles?</h4>
                     <Grid container spacing={2} justifyContent="center">
                       <Grid item>
                         <Button style={{ display: 'block', width: '150px', height: "50px", fontSize: "17px" }} variant="contained" onClick={() => clearChecks()}>Yes</Button>
