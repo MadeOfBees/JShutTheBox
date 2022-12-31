@@ -6,9 +6,9 @@ const NineMonoliths = ({ monoliths, handleMonolithClick }) => {
   const theme = useTheme();
   return (
     <div>
-      <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginTop: '5%' }}>
+      <Grid container spacing={1} justifyContent="center" alignItems="center" style={{ marginTop: '5%' }}>
         {monoliths.map((monolithNum, index) => (
-          <Grid item xs={1} key={index} style={{ maxWidth: '100%' }}>
+          <Grid item xs={3} md={2} lg={1} key={index} style={{ maxWidth: '100%' }}>
             <Button
               onClick={() => handleMonolithClick(monolithNum)}
               style={{

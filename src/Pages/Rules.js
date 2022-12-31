@@ -10,7 +10,7 @@ function AboutUs() {
   return (
     <div>
       <h1>Good {greetings()}!</h1>
-      <h3>Welcome to our site's open Beta! (Version 1.3)</h3>
+      <h3>Welcome to our site's open Beta! (Version 1.3.1)</h3>
       <h3>The rules of Shut The Box are simple:</h3>
       <ul>
         <li>Shut the box is a dice game that can be played by one or more players.</li>
