@@ -192,12 +192,12 @@ const DisplayBoard = ({ playerTotal, style }) => {
     }
     else {
       if (currentDice.length === 0) {
-        setErrorModalContent("Roll the dice!");
+        setErrorModalContent("Roll the dice to begin!");
         handleOpenErrorModal();
       } else {
         const canCoverMonolith = checkMonoliths(currentDice, monolith);
         if (!canCoverMonolith) {
-          setErrorModalContent(`Cannot flip tile ${monolith} with current dice!`);
+          setErrorModalContent(`Cannot flip tile with current dice!`);
           handleOpenErrorModal();
         } else {
           const updatedMonoliths = monoliths.map((m) => {
