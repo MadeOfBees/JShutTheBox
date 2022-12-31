@@ -27,6 +27,7 @@ const DisplayBoard = ({ playerTotal }) => {
   const [refreshNum, setRefreshNum] = React.useState(0);
   const handleCloseWinnerModal = () => { setWinnerModal(false); restart(); }
   const [rolledThisTurn, setRolledThisTurn] = React.useState(false);
+  const [OGDice, setOGDice] = React.useState([]);
 
   const takeUserInput = () => {
     if (isNaN(userInput)) {
@@ -82,16 +83,26 @@ const DisplayBoard = ({ playerTotal }) => {
 
   const rollDice = (playerIndex, canRoll) => {
     if (!rolledThisTurn || canRoll) {
-      setRolledThisTurn(true)
-      const dice1 = Math.floor(Math.random() * 6) + 1;
-      const dice2 = Math.floor(Math.random() * 6) + 1;
-      const curtis = [dice1, dice2];
-      setCurrentDice(curtis);
-      setKey(key + 1);
-      const diceElements = document.querySelectorAll('.die');
-      diceElements.forEach((die) => {
-        die.classList.add('roll');
-      });
+      if (nextStep(playerIndex)) {
+        setRolledThisTurn(true)
+        const dice1 = Math.floor(Math.random() * 6) + 1;
+        const dice2 = Math.floor(Math.random() * 6) + 1;
+        const curtis = [dice1, dice2];
+        setCurrentDice(curtis);
+        setOGDice(curtis);
+        setKey(key + 1);
+        const diceElements = document.querySelectorAll('.die');
+        diceElements.forEach((die) => {
+          die.classList.add('roll');
+        });
+        const newMonoliths = [...monoliths];
+        newMonoliths.forEach((monolith, index) => {
+          if (monolith === '*') {
+            newMonoliths[index] = '⠀';
+          }
+        });
+        setMonoliths(newMonoliths);
+      }
     } else {
       setErrorModalContent("You've already rolled this turn");
       handleOpenErrorModal();
@@ -103,33 +114,51 @@ const DisplayBoard = ({ playerTotal }) => {
     setRefreshNum(refreshNum + 1);
   };
 
-  const nextTurn = (playerIndex) => {
-    endTurn();
-    const newPlayers = [...players];
-    newPlayers[playerIndex].turn = false;
-    newPlayers[(playerIndex + 1) % playerTotal].turn = true;
-    setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    setPlayers(newPlayers);
-    setRolledThisTurn(false)
-    rollDice(((playerIndex + 1) % playerTotal),true);
+  const nextStep = (playerIndex) => {
+    if (currentDice.reduce((acc, cur) => acc + cur, 0) === 0) {
+      return true;
+    }
+    if (monoliths.includes('*')) {
+      setErrorModalContent("You can't leave *s on the board!");
+      handleOpenErrorModal();
+      const fixedMonoliths = [...monoliths];
+      fixedMonoliths.forEach((monolith, index) => {
+        if (monolith === '*') {
+          fixedMonoliths[index] = index + 1;
+        }
+      });
+      setMonoliths(fixedMonoliths);
+      setCurrentDice(OGDice);
+      return false;
+    } else {
+      return true;
+    }
   };
 
-  const endTurn = () => {
-    const newPlayers = [...players];
-    const monolithsLeft = monoliths.filter((monolith) => monolith !== '⠀');
-    const monolithsLeftSum = monolithsLeft.reduce((acc, cur) => acc + cur, 0);
-    newPlayers.forEach((player) => {
-      if (player.turn) {
-        player.score += monolithsLeftSum;
-        player.played = true;
+
+  const nextTurn = (playerIndex) => {
+    if (nextStep(playerIndex)) {
+      const newPlayers = [...players];
+      newPlayers.forEach((player) => {
+        if (player.turn) {
+          player.score += monoliths.filter((monolith) => monolith !== "*" && monolith !== "⠀").reduce((acc, cur) => acc + cur, 0);
+          player.played = true;
+        }
+      });
+      newPlayers[playerIndex].turn = false;
+      newPlayers[(playerIndex + 1) % playerTotal].turn = true;
+      setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      setPlayers(newPlayers);
+      setRolledThisTurn(false);
+      if (newPlayers.every((player) => player.played)) {
+        endGame();
+      } else {
+        rollDice(((playerIndex + 1) % playerTotal), true);
+        setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
       }
     }
-    );
-    setPlayers(newPlayers);
-    if (newPlayers.every((player) => player.played)) {
-      endGame();
-    }
   };
+  
 
   const checkMonoliths = (dice, monolith) => {
     const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
@@ -141,52 +170,30 @@ const DisplayBoard = ({ playerTotal }) => {
     return false;
   };
 
-  const canCoverMonolithWithoutRemainder = (monolithValue, diceRolls) => {
-    const diceSum = diceRolls.reduce((acc, cur) => acc + cur, 0);
-    if (diceSum >= monolithValue) {
-      const remainder = diceSum - monolithValue;
-      const monolithsLeft = monoliths.filter((monolith) => monolith !== '⠀');
-      const monolithsLeftSum = monolithsLeft.reduce((acc, cur) => acc + cur, 0);
-      if (monolithsLeftSum >= remainder) {
-        return true;
-      }
-    }
-    return false;
-  };
-
   const handleMonolithClick = (monolith) => {
-    // TODO: make this actually check if the monolith can be flipped
     if (currentDice.length === 0) {
       setErrorModalContent("You must roll the dice before flipping a monolith!");
       handleOpenErrorModal();
     } else {
-      if (!canCoverMonolithWithoutRemainder(monolith, currentDice)) {
-        setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+      if (!monoliths.includes(monolith)) {
+        setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
         handleOpenErrorModal();
-      } else
-        if (!monoliths.includes(monolith)) {
-          setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
+      } else {
+        const canCoverMonolith = checkMonoliths(currentDice, monolith);
+        if (!canCoverMonolith) {
+          setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
           handleOpenErrorModal();
         } else {
-          const canCoverMonolith = checkMonoliths(currentDice, monolith);
-          if (!canCoverMonolith) {
-            setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
-            handleOpenErrorModal();
-          } else {
-            const updatedMonoliths = monoliths.map((m) => {
-              setRolledThisTurn(false);
-              if (m === monolith) {
-                return '⠀';
-              }
-              return m;
-            });
-            setMonoliths(updatedMonoliths);
-            if (monoliths.length === 0) {
-              setWinnerModalContent(`Player ${players[0].playerNum} wins!`);
-              handleOpenWinnerModal();
+          const updatedMonoliths = monoliths.map((m) => {
+            setRolledThisTurn(false);
+            if (m === monolith) {
+              return '*';
             }
-          }
+            return m;
+          });
+          setMonoliths(updatedMonoliths);
         }
+      }
     }
   };
 
