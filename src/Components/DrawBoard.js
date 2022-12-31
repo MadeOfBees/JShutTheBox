@@ -69,6 +69,7 @@ const DisplayBoard = ({ playerTotal }) => {
       playerArray[0].turn = true;
       setPlayers(playerArray);
       startGame(playerArray);
+      rollDice(0, true);
     }
   };
 
