@@ -28,6 +28,9 @@ const DisplayBoard = ({ playerTotal }) => {
   const handleCloseWinnerModal = () => { setWinnerModal(false); restart(); }
   const [rolledThisTurn, setRolledThisTurn] = React.useState(false);
   const [OGDice, setOGDice] = React.useState([]);
+  const [askReset, setAskReset] = React.useState(false);
+  const handleCloseAskReset = () => setAskReset(false);
+  const handleOpenAskReset = () => setAskReset(true);
 
   const takeUserInput = () => {
     if (isNaN(userInput)) {
@@ -97,7 +100,7 @@ const DisplayBoard = ({ playerTotal }) => {
         });
         const newMonoliths = [...monoliths];
         newMonoliths.forEach((monolith, index) => {
-          if (monolith === '*') {
+          if (monolith === '✓') {
             newMonoliths[index] = '⠀';
           }
         });
@@ -118,12 +121,12 @@ const DisplayBoard = ({ playerTotal }) => {
     if (currentDice.reduce((acc, cur) => acc + cur, 0) === 0) {
       return true;
     }
-    if (monoliths.includes('*')) {
-      setErrorModalContent("You can't leave *s on the board!");
+    if (monoliths.includes('✓')) {
+      setErrorModalContent("You can't leave ✓s on the board!");
       handleOpenErrorModal();
       const fixedMonoliths = [...monoliths];
       fixedMonoliths.forEach((monolith, index) => {
-        if (monolith === '*') {
+        if (monolith === '✓') {
           fixedMonoliths[index] = index + 1;
         }
       });
@@ -135,30 +138,41 @@ const DisplayBoard = ({ playerTotal }) => {
     }
   };
 
-
   const nextTurn = (playerIndex) => {
+    const totalPlayers = players.length;
     if (nextStep(playerIndex)) {
       const newPlayers = [...players];
       newPlayers.forEach((player) => {
         if (player.turn) {
-          player.score += monoliths.filter((monolith) => monolith !== "*" && monolith !== "⠀").reduce((acc, cur) => acc + cur, 0);
+          player.score += monoliths.filter((monolith) => monolith !== "✓" && monolith !== "⠀").reduce((acc, cur) => acc + cur, 0);
           player.played = true;
         }
       });
       newPlayers[playerIndex].turn = false;
-      newPlayers[(playerIndex + 1) % playerTotal].turn = true;
+      newPlayers[(playerIndex + 1) % totalPlayers].turn = true;
       setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
       setPlayers(newPlayers);
       setRolledThisTurn(false);
       if (newPlayers.every((player) => player.played)) {
         endGame();
       } else {
-        rollDice(((playerIndex + 1) % playerTotal), true);
+        rollDice(((playerIndex + 1) % totalPlayers), true);
         setMonoliths([1, 2, 3, 4, 5, 6, 7, 8, 9]);
       }
     }
   };
-  
+
+  const clearChecks = () => {
+    const newMonoliths = [...monoliths];
+    newMonoliths.forEach((monolith, index) => {
+      if (monolith === '✓') {
+        newMonoliths[index] = index + 1;
+      }
+    });
+    setMonoliths(newMonoliths);
+    setCurrentDice(OGDice);
+    handleCloseAskReset();
+  };
 
   const checkMonoliths = (dice, monolith) => {
     const diceSum = dice.reduce((acc, cur) => acc + cur, 0);
@@ -171,27 +185,32 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const handleMonolithClick = (monolith) => {
-    if (currentDice.length === 0) {
-      setErrorModalContent("You must roll the dice before flipping a monolith!");
-      handleOpenErrorModal();
-    } else {
-      if (!monoliths.includes(monolith)) {
-        setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
+    if (monolith === '✓') {
+      handleOpenAskReset();
+    }
+    else {
+      if (currentDice.length === 0) {
+        setErrorModalContent("You must roll the dice before flipping a monolith!");
         handleOpenErrorModal();
       } else {
-        const canCoverMonolith = checkMonoliths(currentDice, monolith);
-        if (!canCoverMonolith) {
-          setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+        if (!monoliths.includes(monolith)) {
+          setErrorModalContent(`Monolith ${monolith} has already been flipped!`);
           handleOpenErrorModal();
         } else {
-          const updatedMonoliths = monoliths.map((m) => {
-            setRolledThisTurn(false);
-            if (m === monolith) {
-              return '*';
-            }
-            return m;
-          });
-          setMonoliths(updatedMonoliths);
+          const canCoverMonolith = checkMonoliths(currentDice, monolith);
+          if (!canCoverMonolith) {
+            setErrorModalContent(`Cannot flip monolith ${monolith} with current dice!`);
+            handleOpenErrorModal();
+          } else {
+            const updatedMonoliths = monoliths.map((m) => {
+              setRolledThisTurn(false);
+              if (m === monolith) {
+                return '✓';
+              }
+              return m;
+            });
+            setMonoliths(updatedMonoliths);
+          }
         }
       }
     }
@@ -217,7 +236,6 @@ const DisplayBoard = ({ playerTotal }) => {
   };
 
   const restart = (one) => {
-    // TODO: make it so the game actually restarts instead of just resetting the scores, the players are bugged where it shows the right number of players but only players that entered the first game get a turn.
     const newPlayers = [...players];
     newPlayers.forEach((player) => {
       player.score = 0;
@@ -283,6 +301,21 @@ const DisplayBoard = ({ playerTotal }) => {
                 <Stack>
                   <Box sx={style}>{winnerModalContent}</Box>
                 </Stack>
+              </Modal>
+              <Modal open={askReset} onClose={handleCloseAskReset} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                <Box sx={style}>
+                  <Stack>
+                    <h4 style={{ textAlign: 'center' }}>Are you sure you want to reset all checked monoliths?</h4>
+                    <Grid container spacing={2} justifyContent="center">
+                      <Grid item>
+                        <Button style={{ display: 'block', width: '150px', height: "50px", fontSize: "17px" }} variant="contained" onClick={() => clearChecks()}>Yes</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button style={{ display: 'block', width: '150px', height: "50px", fontSize: "17px" }} variant="contained" onClick={() => handleCloseAskReset()}>Wait, no</Button>
+                      </Grid>
+                    </Grid>
+                  </Stack>
+                </Box>
               </Modal>
             </div>
           );
