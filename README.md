@@ -1,4 +1,4 @@
-# JShutTheBox Version 1.0.3
+# JShutTheBox Version 1.0.4
 
 A simple javascript port of the classic game Shut The Box, made with materialUI and react.
 
