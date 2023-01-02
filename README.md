@@ -6,6 +6,9 @@ A simple javascript port of the classic game Shut The Box, made with materialUI 
 
 Click the Github Pages link: https://madeofbees.github.io/JShutTheBox/ to navigate to the site then once there you can play Shut The Box, if you don't know the rules click the "How To Play" button in the bottom left corner. if you want to toggle dark mode click the "Dark Mode" button in the bottom right corner.
 
+![1](https://user-images.githubusercontent.com/9198297/210190277-c7da86d5-41df-4243-8634-706f7b4ba912.PNG)
+![2](https://user-images.githubusercontent.com/9198297/210190279-90776bcd-01bd-4c94-8e4c-19feb6d8d1e5.PNG)
+
 ## Report an issue:
 
 Yell loudly describing your your bug and how to replicate the issue.
