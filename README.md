@@ -15,7 +15,7 @@ Click the Github Pages link: https://madeofbees.github.io/JShutTheBox/ to naviga
 
 ## Report an issue:
 
-Yell loudly describing your your bug and how to replicate the issue.
+Contact me at imMadeOfBees@gmail.com explaining the issue and how to replicate it.
 
 ## Support me:
 
