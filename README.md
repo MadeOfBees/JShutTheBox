@@ -2,7 +2,7 @@
 
 
 
-A simple javascript port of the classic game Shut The Box, made with materialUI and React.
+A javascript port of the classic game Shut The Box, made with materialUI and React.
 
 ## "Installation"/Instructions:
 
